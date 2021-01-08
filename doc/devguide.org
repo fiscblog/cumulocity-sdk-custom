@@ -1,0 +1,48 @@
+#+TITLE: Cumulocity SmartREST C++ Library - Developer's Guide
+#+DATE: <2016-06-29 Wed>
+#+AUTHOR: Xinlei Cao
+#+EMAIL: support@cumulocity.com
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:{} arch:headline author:t c:nil
+#+OPTIONS: creator:comment d:(not "LOGBOOK") date:t e:t email:t f:t inline:t
+#+OPTIONS: num:t p:nil pri:nil stat:t tags:t tasks:t tex:t timestamp:t toc:t
+#+OPTIONS: todo:t |:t
+#+CREATOR: Emacs 24.5.1 (Org mode 8.2.10)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+OPTIONS: texht:t
+#+LATEX_CLASS: myreport
+#+LATEX_CLASS_OPTIONS: [a4paper,10pt]
+# #+LATEX_HEADER: \usepackage[a4paper,head=26pt,foot=11pt,footskip=.25in]{geometry}
+#+LATEX_HEADER: \usepackage{mdframed}
+# #+LATEX_HEADER: \usepackage{fancyhdr}
+# #+LATEX_HEADER: \fancyhf{}
+# #+LATEX_HEADER: \lhead{SmartREST C++ Developer's Guide}
+# #+LATEX_HEADER: \rhead{\includegraphics[width=.25\textwidth]{img/logo}}
+# #+LATEX_HEADER: \rfoot{Page \thepage}
+# #+LATEX_HEADER: \pagestyle{fancy}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \hypersetup{
+#+LATEX_HEADER:     colorlinks,
+#+LATEX_HEADER:     linkcolor={blue!50!black},
+#+LATEX_HEADER:     citecolor={red!50!black},
+#+LATEX_HEADER:     urlcolor={blue!80!black}
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \newenvironment{note}
+#+LATEX_HEADER: {\begin{mdframed}[backgroundcolor=green!10,font=\footnotesize]}
+#+LATEX_HEADER: {\end{mdframed}}
+# #+LATEX_HEADER: \renewcommand{\headrulewidth}{2pt}
+# #+LATEX_HEADER: \renewcommand{\footrulewidth}{1pt}
+#+LATEX_HEADER_EXTRA: \input{title}
+
+#+TOC: listings
+#+TOC: tables
+
+#+INCLUDE: ./devguide/intro.org :minlevel 1
+#+INCLUDE: ./devguide/build.org :minlevel 1
+#+INCLUDE: ./devguide/use.org :minlevel 1
+#+INCLUDE: ./devguide/reference.org :minlevel 1
+#+INCLUDE: ./devguide/custom.org :minlevel 1
