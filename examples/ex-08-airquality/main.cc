@@ -24,6 +24,7 @@
 
 #include "integrate.h"
 #include "messagehandler.h"
+#include "srutils.h"
 #include "wiringPiI2C.h"
 
 
@@ -78,7 +79,7 @@ int main()
         return 0;
     }
 
-    string srversion, srtemplate;
+    std::string srversion, srtemplate;
     if (readSrTemplate("srtemplate.txt", srversion, srtemplate) != 0)
     {
         return 0;

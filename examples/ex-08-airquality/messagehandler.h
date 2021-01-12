@@ -16,7 +16,7 @@ public:
     {
          bme.read();
          const int temperature = bme.getTemperature();
-         agent.send("103," + agent.ID() + "," + to_string(temperature));
+         agent.send("103," + agent.ID() + "," + std::to_string(temperature));
     }
 private:
     BME280 &bme;
@@ -31,7 +31,7 @@ public:
      {
          bme.read();
          const int humidity = bme.getHumidity();
-         agent.send("104," + agent.ID() + "," + to_string(humidity));
+         agent.send("104," + agent.ID() + "," + std::to_string(humidity));
      }
 private:
     BME280 &bme;
@@ -46,7 +46,7 @@ public:
      {
          bme.read();
          const int pressure = bme.getPressure() / 100;
-         agent.send("105," + agent.ID() + "," + to_string(pressure));
+         agent.send("105," + agent.ID() + "," + std::to_string(pressure));
      }
 private:
      BME280 &bme;
@@ -64,7 +64,7 @@ public:
         tsl.read();
         const int luminosity = tsl.getLux();
         tsl.powerOn(false);
-        agent.send("106," + agent.ID() + "," + to_string(luminosity));
+        agent.send("106," + agent.ID() + "," + std::to_string(luminosity));
     }
 private:
     TSL2561 &tsl;
@@ -81,7 +81,7 @@ public:
         {
             std::cerr << r.value(i) << " ";
         }
-        std::cerr << endl;
+        std::cerr << std::endl;
 
         agent.send("108," + r.value(2) + ",SUCCESSFUL");
     }
@@ -98,7 +98,7 @@ public:
         {
             std::cerr << r.value(i) << " ";
         }
-        std::cerr << endl;
+        std::cerr << std::endl;
 
         agent.send("109," + r.value(2) + ",SUCCESSFUL");
     }
@@ -115,7 +115,7 @@ public:
         {
             std::cerr << r.value(i) << " ";
         }
-        std::cerr << endl;
+        std::cerr << std::endl;
 
         agent.send("110," + r.value(2) + ",SUCCESSFUL");
     }
@@ -132,7 +132,7 @@ public:
         {
             std::cerr << r.value(i) << " ";
         }
-        std::cerr << endl;
+        std::cerr << std::endl;
 
         agent.send("111," + r.value(2) + ",SUCCESSFUL");
     }
