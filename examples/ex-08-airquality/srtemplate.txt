@@ -1,0 +1,27 @@
+bbv-airquality-1-2
+
+10,100,GET,/identity/externalIds/c8y_Serial/%%,,application/json,%%,STRING,
+
+10,101,POST,/inventory/managedObjects,application/json,application/json,%%,,"{""name"":""bbv-airquality"",""type"":""c8y_hello"",""c8y_IsDevice"":{},""com_cumulocity_model_Agent"":{}}"
+
+10,102,POST,/identity/globalIds/%%/externalIds,application/json,,%%,STRING STRING,"{""externalId"":""%%"",""type"":""c8y_Serial""}"
+
+10,103,POST,/measurement/measurements,application/json,,%%,NOW UNSIGNED NUMBER,"{""time"":""%%"",""source"":{""id"":""%%""},""type"":""c8y_TemperatureMeasurement"",""c8y_TemperatureMeasurement"":{""Temperature"":{""value"":%%,""unit"":""C""}}}"
+10,104,POST,/measurement/measurements,application/json,,%%,NOW UNSIGNED NUMBER,"{""time"":""%%"",""source"":{""id"":""%%""},""type"":""c8y_HumidityMeasurement"",""c8y_HumidityMeasurement"":{""Humidity"":{""value"":%%,""unit"":""%""}}}"
+10,105,POST,/measurement/measurements,application/json,,%%,NOW UNSIGNED NUMBER,"{""time"":""%%"",""source"":{""id"":""%%""},""type"":""c8y_PressureMeasurement"",""c8y_PressureMeasurement"":{""Pressure"":{""value"":%%,""unit"":""hPa""}}}"
+10,106,POST,/measurement/measurements,application/json,,%%,NOW UNSIGNED NUMBER,"{""time"":""%%"",""source"":{""id"":""%%""},""type"":""c8y_LuminosityMeasurement"",""c8y_LuminosityMeasurement"":{""Luminosity"":{""value"":%%,""unit"":""lux""}}}"
+
+10,107,PUT,/inventory/managedObjects/%%,application/json,,%%,UNSIGNED STRING,"{""c8y_SupportedOperations"":[""c8y_Restart"",""c8y_Configuration"",""c8y_Software"",""c8y_Firmware""]}"
+
+10,108,PUT,/devicecontrol/operations/%%,application/json,,%%,UNSIGNED STRING,"{""status"":""%%""}"
+10,109,PUT,/devicecontrol/operations/%%,application/json,,%%,UNSIGNED STRING,"{""status"":""%%""}"
+10,110,PUT,/devicecontrol/operations/%%,application/json,,%%,UNSIGNED STRING,"{""status"":""%%""}"
+10,111,PUT,/devicecontrol/operations/%%,application/json,,%%,UNSIGNED STRING,"{""status"":""%%""}"
+
+11,500,$.managedObject,,$.id
+11,501,,$.c8y_IsDevice,$.id
+11,502,,$.c8y_Restart,$.id,$.deviceId
+11,503,,$.c8y_Configuration,$.id,$.deviceId
+11,504,,$.c8y_Software,$.id,$.deviceId
+11,505,,$.c8y_Firmware,$.id,$.deviceId
+

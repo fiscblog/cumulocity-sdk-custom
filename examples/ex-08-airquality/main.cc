@@ -19,214 +19,17 @@
  */
 
 #include <cstdlib>
-#include <iostream>
-#include <sragent.h>
-#include <srreporter.h>
-#include <srlogger.h>
 #include <srdevicepush.h>
 #include <unistd.h>
+
 #include "integrate.h"
+#include "messagehandler.h"
 #include "wiringPiI2C.h"
-#include "BME280.h"
-#include "TSL2561.h"
+
 
 #define SENSOR_ID_BME           0x76
 #define SENSOR_ID_TSL           0x29
 
-using namespace std;
-
-static const char *srversion = "bbv-airquality-1-2";
-static const char *srtemplate =
-        "10,100,GET,/identity/externalIds/c8y_Serial/%%,,"
-        "application/json,%%,STRING,\n"
-
-        "10,101,POST,/inventory/managedObjects,application/json,"
-        "application/json,%%,,\"{\"\"name\"\":\"\"bbv-airquality\"\","
-        "\"\"type\"\":\"\"c8y_hello\"\",\"\"c8y_IsDevice\"\":{},"
-        "\"\"com_cumulocity_model_Agent\"\":{},"
-        "\"\"c8y_SupportedOperations\"\":[\"\"c8y_Restart\"\",\"\"c8y_Configuration\"\",\"\"c8y_Software\"\",\"\"c8y_Firmware\"\"]}\"\n"
-
-        "10,102,POST,/identity/globalIds/%%/externalIds,application/json,,%%,"
-        "STRING STRING,\"{\"\"externalId\"\":\"\"%%\"\","
-        "\"\"type\"\":\"\"c8y_Serial\"\"}\"\n"
-
-        "10,103,POST,/measurement/measurements,application/json,,%%,"
-        "NOW UNSIGNED NUMBER,\"{\"\"time\"\":\"\"%%\"\","
-        "\"\"source\"\":{\"\"id\"\":\"\"%%\"\"},"
-        "\"\"type\"\":\"\"c8y_TemperatureMeasurement\"\","
-        "\"\"c8y_TemperatureMeasurement\"\":{\"\"Temperature\"\":"
-        "{\"\"value\"\":%%,\"\"unit\"\":\"\"C\"\"}}}\"\n"
-
-        "10,104,POST,/measurement/measurements,application/json,,%%,"
-        "NOW UNSIGNED NUMBER,\"{\"\"time\"\":\"\"%%\"\","
-        "\"\"source\"\":{\"\"id\"\":\"\"%%\"\"},"
-        "\"\"type\"\":\"\"c8y_HumidityMeasurement\"\","
-        "\"\"c8y_HumidityMeasurement\"\":{\"\"Humidity\"\":"
-        "{\"\"value\"\":%%,\"\"unit\"\":\"\"%\"\"}}}\"\n"
-
-        "10,105,POST,/measurement/measurements,application/json,,%%,"
-        "NOW UNSIGNED NUMBER,\"{\"\"time\"\":\"\"%%\"\","
-        "\"\"source\"\":{\"\"id\"\":\"\"%%\"\"},"
-        "\"\"type\"\":\"\"c8y_PressureMeasurement\"\","
-        "\"\"c8y_PressureMeasurement\"\":{\"\"Pressure\"\":"
-        "{\"\"value\"\":%%,\"\"unit\"\":\"\"hPa\"\"}}}\"\n"
-
-        "10,106,POST,/measurement/measurements,application/json,,%%,"
-        "NOW UNSIGNED NUMBER,\"{\"\"time\"\":\"\"%%\"\","
-        "\"\"source\"\":{\"\"id\"\":\"\"%%\"\"},"
-        "\"\"type\"\":\"\"c8y_LuminosityMeasurement\"\","
-        "\"\"c8y_LuminosityMeasurement\"\":{\"\"Luminosity\"\":"
-        "{\"\"value\"\":%%,\"\"unit\"\":\"\"lux\"\"}}}\"\n"
-
-        "10,107,PUT,/devicecontrol/operations/%%,application/json,,%%,"
-        "UNSIGNED STRING,\"{\"\"status\"\":\"\"%%\"\"}\"\n"
-
-        "10,108,PUT,/devicecontrol/operations/%%,application/json,,%%,"
-        "UNSIGNED STRING,\"{\"\"status\"\":\"\"%%\"\"}\"\n"
-
-        "10,109,PUT,/devicecontrol/operations/%%,application/json,,%%,"
-        "UNSIGNED STRING,\"{\"\"status\"\":\"\"%%\"\"}\"\n"
-
-        "10,110,PUT,/devicecontrol/operations/%%,application/json,,%%,"
-        "UNSIGNED STRING,\"{\"\"status\"\":\"\"%%\"\"}\"\n"
-
-        "11,500,$.managedObject,,$.id\n"
-        "11,501,,$.c8y_IsDevice,$.id\n"
-        "11,502,,$.c8y_Restart,$.id,$.deviceId\n"
-        "11,503,,$.c8y_Configuration,$.id,$.deviceId\n"
-        "11,504,,$.c8y_Software,$.id,$.deviceId\n"
-        "11,505,,$.c8y_Firmware,$.id,$.deviceId\n";
-
-class RestartHandler: public SrMsgHandler
-{
-public:
-
-    virtual void operator()(SrRecord &r, SrAgent &agent)
-    {
-        agent.send("107," + r.value(2) + ",EXECUTING");
-        for (int i = 0; i < r.size(); ++i)
-        {
-            cerr << r.value(i) << " ";
-        }
-        cerr << endl;
-
-        agent.send("107," + r.value(2) + ",SUCCESSFUL");
-    }
-};
-
-class ConfigurationHandler: public SrMsgHandler
-{
-public:
-
-    virtual void operator()(SrRecord &r, SrAgent &agent)
-    {
-        agent.send("108," + r.value(2) + ",EXECUTING");
-        for (int i = 0; i < r.size(); ++i)
-        {
-            cerr << r.value(i) << " ";
-        }
-        cerr << endl;
-
-        agent.send("108," + r.value(2) + ",SUCCESSFUL");
-    }
-};
-
-class SoftwareHandler: public SrMsgHandler
-{
-public:
-
-    virtual void operator()(SrRecord &r, SrAgent &agent)
-    {
-        agent.send("109," + r.value(2) + ",EXECUTING");
-        for (int i = 0; i < r.size(); ++i)
-        {
-            cerr << r.value(i) << " ";
-        }
-        cerr << endl;
-
-        agent.send("109," + r.value(2) + ",SUCCESSFUL");
-    }
-};
-
-class FirmwareHandler: public SrMsgHandler
-{
-public:
-
-    virtual void operator()(SrRecord &r, SrAgent &agent)
-    {
-        agent.send("110," + r.value(2) + ",EXECUTING");
-        for (int i = 0; i < r.size(); ++i)
-        {
-            cerr << r.value(i) << " ";
-        }
-        cerr << endl;
-
-        agent.send("110," + r.value(2) + ",SUCCESSFUL");
-    }
-};
-
-class TemperatureMeasurement: public SrTimerHandler
-{
-public:
-    TemperatureMeasurement(BME280 &_bme) : bme(_bme) {}
-
-    virtual void operator()(SrTimer &timer, SrAgent &agent)
-    {
-         bme.read();
-         const int temperature = bme.getTemperature();
-         agent.send("103," + agent.ID() + "," + to_string(temperature));
-    }
-private:
-    BME280 &bme;
-};
-
-class HumidityMeasurement: public SrTimerHandler
-{
-public:
-     HumidityMeasurement(BME280 &_bme) : bme(_bme) {}
-
-     virtual void operator()(SrTimer &timer, SrAgent &agent)
-     {
-         bme.read();
-         const int humidity = bme.getHumidity();
-         agent.send("104," + agent.ID() + "," + to_string(humidity));
-     }
-private:
-    BME280 &bme;
-};
-
-class PressureMeasurement: public SrTimerHandler
-{
-public:
-     PressureMeasurement(BME280 &_bme) : bme(_bme) {}
-
-     virtual void operator()(SrTimer &timer, SrAgent &agent)
-     {
-         bme.read();
-         const int pressure = bme.getPressure() / 100;
-         agent.send("105," + agent.ID() + "," + to_string(pressure));
-     }
-private:
-     BME280 &bme;
-};
-
-class LuminosityMeasurement: public SrTimerHandler
-{
-public:
-    LuminosityMeasurement(TSL2561 &_tsl) : tsl(_tsl) {}
-
-    virtual void operator()(SrTimer &timer, SrAgent &agent)
-    {
-        tsl.powerOn(true);
-        usleep(500000);
-        tsl.read();
-        const int luminosity = tsl.getLux();
-        tsl.powerOn(false);
-        agent.send("106," + agent.ID() + "," + to_string(luminosity));
-    }
-private:
-    TSL2561 &tsl;
-};
 
 int main()
 {
@@ -271,6 +74,12 @@ int main()
     Integrate igt;
     SrAgent agent(server, deviceID, &igt); // instantiate SrAgent
     if (agent.bootstrap(credentialPath))   // bootstrap to Cumulocity
+    {
+        return 0;
+    }
+
+    string srversion, srtemplate;
+    if (readSrTemplate("srtemplate.txt", srversion, srtemplate) != 0)
     {
         return 0;
     }
