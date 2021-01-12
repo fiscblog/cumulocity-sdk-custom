@@ -42,7 +42,8 @@ static const char *srtemplate =
         "10,101,POST,/inventory/managedObjects,application/json,"
         "application/json,%%,,\"{\"\"name\"\":\"\"bbv-airquality\"\","
         "\"\"type\"\":\"\"c8y_hello\"\",\"\"c8y_IsDevice\"\":{},"
-        "\"\"com_cumulocity_model_Agent\"\":{}}\"\n"
+        "\"\"com_cumulocity_model_Agent\"\":{},"
+        "\"\"c8y_SupportedOperations\"\":[\"\"c8y_Restart\"\",\"\"c8y_Configuration\"\",\"\"c8y_Software\"\",\"\"c8y_Firmware\"\"]}\"\n"
 
         "10,102,POST,/identity/globalIds/%%/externalIds,application/json,,%%,"
         "STRING STRING,\"{\"\"externalId\"\":\"\"%%\"\","
@@ -76,10 +77,92 @@ static const char *srtemplate =
         "\"\"c8y_LuminosityMeasurement\"\":{\"\"Luminosity\"\":"
         "{\"\"value\"\":%%,\"\"unit\"\":\"\"lux\"\"}}}\"\n"
 
+        "10,107,PUT,/devicecontrol/operations/%%,application/json,,%%,"
+        "UNSIGNED STRING,\"{\"\"status\"\":\"\"%%\"\"}\"\n"
+
+        "10,108,PUT,/devicecontrol/operations/%%,application/json,,%%,"
+        "UNSIGNED STRING,\"{\"\"status\"\":\"\"%%\"\"}\"\n"
+
+        "10,109,PUT,/devicecontrol/operations/%%,application/json,,%%,"
+        "UNSIGNED STRING,\"{\"\"status\"\":\"\"%%\"\"}\"\n"
+
+        "10,110,PUT,/devicecontrol/operations/%%,application/json,,%%,"
+        "UNSIGNED STRING,\"{\"\"status\"\":\"\"%%\"\"}\"\n"
 
         "11,500,$.managedObject,,$.id\n"
         "11,501,,$.c8y_IsDevice,$.id\n";
+        "11,502,,$.c8y_Restart,$.id,$.deviceId\n";
+        "11,503,,$.c8y_Configuration,$.id,$.deviceId\n";
+        "11,504,,$.c8y_Software,$.id,$.deviceId\n";
+        "11,505,,$.c8y_Firmware,$.id,$.deviceId\n";
 
+class RestartHandler: public SrMsgHandler
+{
+public:
+
+    virtual void operator()(SrRecord &r, SrAgent &agent)
+    {
+        agent.send("107," + r.value(2) + ",EXECUTING");
+        for (int i = 0; i < r.size(); ++i)
+        {
+            cerr << r.value(i) << " ";
+        }
+        cerr << endl;
+
+        agent.send("107," + r.value(2) + ",SUCCESSFUL");
+    }
+};
+
+class ConfigurationHandler: public SrMsgHandler
+{
+public:
+
+    virtual void operator()(SrRecord &r, SrAgent &agent)
+    {
+        agent.send("108," + r.value(2) + ",EXECUTING");
+        for (int i = 0; i < r.size(); ++i)
+        {
+            cerr << r.value(i) << " ";
+        }
+        cerr << endl;
+
+        agent.send("108," + r.value(2) + ",SUCCESSFUL");
+    }
+};
+
+class SoftwareHandler: public SrMsgHandler
+{
+public:
+
+    virtual void operator()(SrRecord &r, SrAgent &agent)
+    {
+        agent.send("109," + r.value(2) + ",EXECUTING");
+        for (int i = 0; i < r.size(); ++i)
+        {
+            cerr << r.value(i) << " ";
+        }
+        cerr << endl;
+
+        agent.send("109," + r.value(2) + ",SUCCESSFUL");
+    }
+};
+
+class FirmwareHandler: public SrMsgHandler
+{
+public:
+
+    virtual void operator()(SrRecord &r, SrAgent &agent)
+    {
+        agent.send("110," + r.value(2) + ",EXECUTING");
+        for (int i = 0; i < r.size(); ++i)
+        {
+            cerr << r.value(i) << " ";
+        }
+        cerr << endl;
+
+        agent.send("110," + r.value(2) + ",SUCCESSFUL");
+    }
+};
 
 class TemperatureMeasurement: public SrTimerHandler
 {
@@ -218,6 +301,24 @@ int main()
 
     SrReporter reporter(server, agent.XID(), agent.auth(), agent.egress, agent.ingress);
     if (reporter.start() != 0)      // Start the reporter thread
+    {
+        return 0;
+    }
+
+    RestartHandler restartHandler;
+    agent.addMsgHandler(502, &restartHandler);
+
+    ConfigurationHandler configurationHandler;
+    agent.addMsgHandler(503, &configurationHandler);
+
+    SoftwareHandler softwareHandler;
+    agent.addMsgHandler(504, &softwareHandler);
+
+    FirmwareHandler firmwareHandler;
+    agent.addMsgHandler(505, &firmwareHandler);
+
+    SrDevicePush push(server, agent.XID(), agent.auth(), agent.ID(), agent.ingress);
+    if (push.start() != 0)      // Start the device push thread
     {
         return 0;
     }
