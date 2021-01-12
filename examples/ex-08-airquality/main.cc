@@ -23,6 +23,7 @@
 #include <sragent.h>
 #include <srreporter.h>
 #include <srlogger.h>
+#include <srdevicepush.h>
 #include <unistd.h>
 #include "integrate.h"
 #include "wiringPiI2C.h"
@@ -34,7 +35,7 @@
 
 using namespace std;
 
-static const char *srversion = "helloc8y_4";
+static const char *srversion = "bbv-airquality-1-2";
 static const char *srtemplate =
         "10,100,GET,/identity/externalIds/c8y_Serial/%%,,"
         "application/json,%%,STRING,\n"
@@ -90,10 +91,10 @@ static const char *srtemplate =
         "UNSIGNED STRING,\"{\"\"status\"\":\"\"%%\"\"}\"\n"
 
         "11,500,$.managedObject,,$.id\n"
-        "11,501,,$.c8y_IsDevice,$.id\n";
-        "11,502,,$.c8y_Restart,$.id,$.deviceId\n";
-        "11,503,,$.c8y_Configuration,$.id,$.deviceId\n";
-        "11,504,,$.c8y_Software,$.id,$.deviceId\n";
+        "11,501,,$.c8y_IsDevice,$.id\n"
+        "11,502,,$.c8y_Restart,$.id,$.deviceId\n"
+        "11,503,,$.c8y_Configuration,$.id,$.deviceId\n"
+        "11,504,,$.c8y_Software,$.id,$.deviceId\n"
         "11,505,,$.c8y_Firmware,$.id,$.deviceId\n";
 
 class RestartHandler: public SrMsgHandler
@@ -230,7 +231,7 @@ private:
 int main()
 {
     const char* const server = "http://bbv-ch.cumulocity.com";
-    const char* const credentialPath = "/tmp/helloc8y/bbv-airquality";
+    const char* const credentialPath = "/var/helloc8y/bbv-airquality";
     const char* const deviceID = "bbv-airquality"; // unique device identifier
 
     srLogSetLevel(SRLOG_DEBUG);        // set log level to debug
