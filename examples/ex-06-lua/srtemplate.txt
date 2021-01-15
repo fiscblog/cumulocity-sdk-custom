@@ -1,8 +1,8 @@
-helloc8y_3
+bbv-lua-plugins-1-0
 
 10,100,GET,/identity/externalIds/c8y_Serial/%%,,application/json,%%,STRING,
 
-10,101,POST,/inventory/managedObjects,application/json,application/json,%%,,"{""name"":""HelloC8Y-Agent"",""type"":""c8y_hello"",""c8y_IsDevice"":{},""com_cumulocity_model_Agent"":{}}"
+10,101,POST,/inventory/managedObjects,application/json,application/json,%%,,"{""name"":""bbv-lua-plugins"",""type"":""c8y_hello"",""c8y_IsDevice"":{},""com_cumulocity_model_Agent"":{}}"
 
 10,102,POST,/identity/globalIds/%%/externalIds,application/json,,%%,STRING STRING,"{""externalId"":""%%"",""type"":""c8y_Serial""}"
 
@@ -12,6 +12,28 @@ helloc8y_3
 
 10,105,PUT,/devicecontrol/operations/%%,application/json,,%%,UNSIGNED STRING,"{""status"":""%%""}"
 
+10,303,PUT,/devicecontrol/operations/%%,application/json,,%%,UNSIGNED STRING,"{""status"":""%%""}"
+
+10,304,PUT,/devicecontrol/operations/%%,application/json,,%%,UNSIGNED STRING,"{""status"":""FAILED"",""failureReason"":""%%""}"
+
+10,310,PUT,/devicecontrol/operations/%%,application/json,,%%,UNSIGNED STRING STRING STRING,"{""status"":""%%"",""c8y_Command"":{""text"":""%%"", ""result"":""%%""}}"
+
+10,317,PUT,/inventory/managedObjects/%%,application/json,,%%,,"{""c8y_SupportedLogs"":[%%]}"
+
+10,318,PUT,/devicecontrol/operations/%%,application/json,,%%,UNSIGNED STRING STRING STRING INTEGER STRING STRING,"{""status"":""SUCCESSFUL"",""c8y_LogfileRequest"":{""logFile"":""%%"",""dateFrom"":""%%"",""dateTo"":""%%"",""maximumLines"":%%,""searchText"":""%%"",""file"":""%%""}}"
+
+10,325,POST,/measurement/measurements,application/json,,%%,NOW UNSIGNED NUMBER NUMBER,"{""time"":""%%"",""source"":{""id"":""%%""},""type"":""c8y_MemoryMeasurement"",""c8y_MemoryMeasurement"":{""Used"":{""value"":%%,""unit"":""MB""},""Total"":{""value"":%%,""unit"":""MB""}}}"
+
+10,326,POST,/measurement/measurements,application/json,,%%,NOW UNSIGNED NUMBER,"{""time"":""%%"",""source"":{""id"":""%%""},""type"":""c8y_CPUMeasurement"",""c8y_CPUMeasurement"":{""Workload"":{""value"":%%,""unit"":""%""}}}"
+
+10,329,POST,/event/events,application/json,,%%,NOW UNSIGNED NUMBER NUMBER NUMBER NUMBER STRING,"{""time"":""%%"",""source"":{""id"":""%%""},""type"":""c8y_LocationUpdate"",""text"":""Location update"",""c8y_Position"":{""alt"":%%,""lat"":%%,""lng"":%%,""velocity"":%%,""timestamp"":""%%""}}"
+
 11,500,$.managedObject,,$.id
 11,501,,$.c8y_IsDevice,$.id
 11,502,,$.c8y_Restart,$.id,$.deviceId
+
+11,804,,$.c8y_Restart,$.id,$.deviceId
+
+11,807,,$.c8y_Command,$.id,$.c8y_Command.text,$.deviceId
+
+11,875,$.operations,$.c8y_Command,$.id,$.c8y_Command.text,$.deviceId

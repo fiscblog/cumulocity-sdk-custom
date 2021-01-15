@@ -58,6 +58,10 @@ int main()
     SrLuaPluginManager lua(agent);
     lua.addLibPath("lua/?.lua");  // add given path to Lua package.path
     lua.load("lua/myplugin.lua"); // load Lua plugin
+    lua.load("lua/logview.lua");
+    lua.load("lua/shell.lua");
+    lua.load("lua/system.lua");
+    lua.load("lua/position.lua");
 
     SrReporter reporter(server, agent.XID(), agent.auth(), agent.egress,  agent.ingress);
     if (reporter.start() != 0)      // Start the reporter thread
