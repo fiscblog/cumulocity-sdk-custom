@@ -31,9 +31,9 @@ using namespace std;
 
 int main()
 {
-    const char* const server = "http://developer.cumulocity.com";
-    const char* const credentialPath = "/tmp/helloc8y";
-    const char* const deviceID = "13344568"; // unique device identifier
+    const char* const server = "http://bbv-ch.cumulocity.com";
+    const char* const credentialPath = "/var/helloc8y/ex-06-lua";
+    const char* const deviceID = "bbv-lua-plugins"; // unique device identifier
 
     srLogSetLevel(SRLOG_DEBUG);        // set log level to debug
 
