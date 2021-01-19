@@ -33,7 +33,7 @@ CPPFLAGS+=-DSR_FILEBUF_PAGE_SCALE=$(SR_FILEBUF_PAGE_SCALE)
 CFLAGS+=-fPIC -pipe -MMD
 CXXFLAGS+=-std=c++11 -fPIC -pipe -pthread -MMD
 LDFLAGS+=-Wl,-soname,$(SONAME) -Wl,--no-undefined -shared
-LDLIBS+=-pthread -llua -llualib -llua5.2-c++
+LDLIBS+=-pthread -llua5.2-c++
 
 ifeq ($(SR_PLUGIN_LUA), 0)
 SRC:=$(filter-out src/srluapluginmanager.cc,$(SRC))
