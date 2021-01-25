@@ -61,7 +61,7 @@ int main()
     lua.load("lua/logview.lua");
     lua.load("lua/shell.lua");
     lua.load("lua/system.lua");
-    lua.load("lua/position.lua");
+    lua.load("lua/location.lua");
 
     SrReporter reporter(server, agent.XID(), agent.auth(), agent.egress,  agent.ingress);
     if (reporter.start() != 0)      // Start the reporter thread

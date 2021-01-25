@@ -11,7 +11,7 @@ function locationUpdate()
 end
 
 function init()
-   timer = c8y:addTimer(10 * 1000, 'locationUpdate')
+   timer = c8y:addTimer(1 * 1000, 'locationUpdate')
    timer:start()
    return 0
 end
