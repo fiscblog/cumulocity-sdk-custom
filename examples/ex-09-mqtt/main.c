@@ -40,16 +40,33 @@ int main(int argc, char* argv[]) {
         printf("Failed to connect, return code %d\n", rc);
         exit(-1);
     }
-    //create device
+    //create device: Name, Revision
     publish(client, "s/us", "100,C MQTT,c8y_MQTTDevice");
+    //add Configuration, Shell and LogfileRequest for device
+    publish(client, "s/us", "114,c8y_Command,c8y_Configuration,c8y_LogfileRequest");
     //set hardware information
     publish(client, "s/us", "110,S123456789,MQTT test model,Rev0.1");
+    //set required update interval to 5min
+    publish(client, "s/us", "117,5");
     //listen for operation
     MQTTClient_subscribe(client, "s/ds", 0);
 
     for (;;) {
+        // send signal strength meas in db
+        publish(client, "s/us", "210,-87");
+        
         //send temperature measurement
         publish(client, "s/us", "211,25");
+
+        //send battery level meas in %
+        publish(client, "s/us", "212,95");
+
+        // create event with altitude & latitude & longitude
+        publish(client, "s/us", "401,51.227741,6.773456");
+
+        // update the position on the device
+        publish(client, "s/us", "402,51.227741,6.773456");
+
         sleep(3);
     }
     MQTTClient_disconnect(client, 1000);
