@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
     MQTTClient_create(&client, ADDRESS, CLIENTID, MQTTCLIENT_PERSISTENCE_NONE, NULL);
     MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
     conn_opts.username = "t573330530/christian.fischer@bbv.ch";
-    conn_opts.password = "<<password>>"; // guess what..
+    conn_opts.password = "";
 
     MQTTClient_setCallbacks(client, NULL, NULL, on_message, NULL);
 
@@ -48,6 +48,11 @@ int main(int argc, char* argv[]) {
     publish(client, "s/us", "110,S123456789,MQTT test model,Rev0.1");
     //set required update interval to 5min
     publish(client, "s/us", "117,5");
+    //set available logfiles
+    publish(client, "s/us", "118,ntcagent,dmesg,logread");
+    // use SR Template GUI instead
+    //publish(client, "s/ut", "10,999,POST,MEASUREMENT,,c8y_MyMeasurement,,c8y_MyMeasurement.M.value,NUMBER,");
+
     //listen for operation
     MQTTClient_subscribe(client, "s/ds", 0);
 
@@ -60,6 +65,8 @@ int main(int argc, char* argv[]) {
 
         //send battery level meas in %
         publish(client, "s/us", "212,95");
+
+        publish(client, "s/uc/149", "999,,34");
 
         // create event with altitude & latitude & longitude
         publish(client, "s/us", "401,51.227741,6.773456");
